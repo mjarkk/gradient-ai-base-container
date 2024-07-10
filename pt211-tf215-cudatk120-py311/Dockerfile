@@ -133,30 +133,14 @@ ENV PATH=$PATH:/usr/local/cuda/bin
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
 # ==================================================================
-# Additional Python Packages
-# ------------------------------------------------------------------
-
-RUN $PIP_INSTALL jupyterlab
-
-# ==================================================================
-# CMake
-# ------------------------------------------------------------------
-
-RUN $GIT_CLONE https://github.com/Kitware/CMake ~/cmake && \
-    cd ~/cmake && \
-    ./bootstrap && \
-    make -j"$(nproc)" install
-
-
-# ==================================================================
 # Node.js and Jupyter Notebook Extensions
 # ------------------------------------------------------------------
 
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash  && \
-    $APT_INSTALL nodejs  && \
-    $PIP_INSTALL jupyter_contrib_nbextensions==0.7.0 jupyterlab-git==0.43.0 && \
-    jupyter contrib nbextension install --user
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash && \
+    $APT_INSTALL nodejs
 
+RUN $PIP_INSTALL notebook==6.4.12 jupyter_contrib_nbextensions jupyterlab
+RUN jupyter contrib nbextension install --user
 
 # ==================================================================
 # Startup
